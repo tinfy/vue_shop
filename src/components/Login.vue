@@ -9,11 +9,11 @@
       <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-width="0px" class="login_form">
         <!-- 用户名 -->
         <el-form-item prop="username">
-          <el-input v-model="loginForm.username" prefix-icon="iconfont icon-shopxingmingyonghumingnicheng"></el-input>
+          <el-input v-model="loginForm.username" prefix-icon="iconfont icon-user"></el-input>
         </el-form-item>
         <!-- 密码 -->
         <el-form-item prop="password">
-          <el-input v-model="loginForm.password" show-password prefix-icon="iconfont icon-shopmima"></el-input>
+          <el-input v-model="loginForm.password" show-password prefix-icon="iconfont icon-3702mima"></el-input>
         </el-form-item>
         <!-- 按钮区域 -->
         <el-form-item class="btns">
@@ -78,7 +78,7 @@ export default {
           return this.$message.error('登录失败')
         }
         this.$message.success('登录成功')
-        console.log(res)
+        // console.log(res)
         // 把生成的token保存到sessionStorage中
         window.sessionStorage.setItem('token', res.data.token)
         // 通过编程式导航跳转到后台主页/home
