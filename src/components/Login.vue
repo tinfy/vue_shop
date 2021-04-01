@@ -78,7 +78,7 @@ export default {
           return this.$message.error('登录失败')
         }
         this.$message.success('登录成功')
-        console.log(res)
+        // console.log(res)
         // 把生成的token保存到sessionStorage中
         window.sessionStorage.setItem('token', res.data.token)
         // 通过编程式导航跳转到后台主页/home
