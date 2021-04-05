@@ -43,7 +43,8 @@
             <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteUserById(scope.row.id)">
             </el-button>
             <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">
-              <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
+              <el-button type="warning" icon="el-icon-setting" size="mini" @click="openAllocateRoleDialog(scope.row)">
+              </el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -95,6 +96,24 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="editDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="editUserInfo">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 分配角色对话框区域 -->
+    <el-dialog title="分配角色" :visible.sync="allocateDialogVisible" width="50%" @close="allocateDialogClosed">
+      <div>
+        <p>当前的用户：{{userInfo.username}}</p>
+        <p>当前的角色：{{userInfo.role_name}}</p>
+        <p>分配新角色：
+          <el-select v-model="selectedRoleId" placeholder="请选择">
+            <el-option v-for="item in rolesList" :key="item.id" :label="item.roleName" :value="item.id">
+            </el-option>
+          </el-select>
+        </p>
+      </div>
+      <!-- 对话框的按钮区域 -->
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="allocateDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="allocateRole">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -215,7 +234,15 @@ export default {
           trigger: 'blur'
         }
         ]
-      }
+      },
+      // 分配角色的对话框
+      allocateDialogVisible: false,
+      // 通过scope.row得到的用户信息
+      userInfo: {},
+      // 获得的所有角色组成的数组
+      rolesList: [],
+      // 下拉框选中的值对应的id
+      selectedRoleId: ''
     }
   },
   created () {
@@ -334,12 +361,45 @@ export default {
       if (confirmResult !== 'confirm') {
         return this.$message.info('已取消删除')
       }
-      const { data: res } = await this.$http.delete(`users/${id}`)
+      const {
+        data: res
+      } = await this.$http.delete(`users/${id}`)
       if (res.meta.status !== 200) {
         return this.$message.error('删除用户失败')
       }
       this.$message.success('删除用户成功')
       this.getUserList()
+    },
+    // 点击“分配角色”按钮触发的事件
+    async openAllocateRoleDialog (userInfo) {
+      this.userInfo = userInfo
+      const {
+        data: res
+      } = await this.$http.get('roles')
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取角色列表失败')
+      }
+      this.rolesList = res.data
+      this.allocateDialogVisible = true
+    },
+    // 点击"确定"按钮,分配角色
+    async allocateRole () {
+      if (!this.selectedRoleId) {
+        this.$message.error('请选择要分配的角色名')
+      }
+      const { data: res } = await this.$http.put(`users/${this.userInfo.id}/role`, {
+        rid: this.selectedRoleId
+      })
+      if (res.meta.status !== 200) {
+        return this.$message.error('分配角色失败')
+      }
+      this.$message.success('分配角色成功')
+      this.getUserList()
+      this.allocateDialogVisible = false
+    },
+    // 分配角色对话框关闭后触发的事件
+    allocateDialogClosed () {
+      this.selectedRoleId = ''
     }
   }
 }
