@@ -49,7 +49,7 @@
           <!-- option用于指定数据源 -->
           <!-- props用于配置级联选择器相关属性 -->
           <el-cascader v-model="selectedKeys" :options="parentCateList" :props="cascaderProp"
-            @change="selectedKeyChange" clearable popper-class="popper">
+            @change="selectedKeyChange" clearable>
           </el-cascader>
         </el-form-item>
       </el-form>
@@ -284,10 +284,5 @@ export default {
 
   .el-cascader {
     width: 100%;
-  }
-
-  .popper {
-    max-height: 200px;
-    overflow: scroll;
   }
 </style>

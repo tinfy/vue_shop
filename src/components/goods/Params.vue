@@ -15,8 +15,7 @@
           <span>选择商品分类：</span>
           <!-- options：数据源 -->
           <!-- props：让数据源中的数据怎么展示在级联框中 value：选项的实际值 label：选项的显示值 children：选项的子分类 -->
-          <el-cascader v-model="selectedCateKeys" :options="cateList" :props="cateProps" @change="handleChange"
-            popper-class="popper">
+          <el-cascader v-model="selectedCateKeys" :options="cateList" :props="cateProps" @change="handleChange">
           </el-cascader>
         </el-col>
       </el-row>
@@ -375,12 +374,7 @@ export default {
     width: 300px;
   }
 
-  .popper {
-    max-height: 200px;
-    overflow: scroll;
-  }
-
-  .el-tag {
+  .el-tag, .button-new-tag, .input-new-tag {
     margin: 10px;
   }
 
