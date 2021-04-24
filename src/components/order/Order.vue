@@ -116,6 +116,7 @@ export default {
       },
       // 是否显示物流信息的对话框
       progressDialogVisible: false,
+      // 物流进度数组
       progressInfo: [{
         time: '2018-05-10 09:39:00',
         ftime: '2018-05-10 09:39:00',
