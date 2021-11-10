@@ -16,16 +16,16 @@
       <!-- 表格区域 -->
       <tree-table class="treetable" :data="cateList" :columns="columns" show-index index-text="#" border
         :show-row-hover="false" :selection-type="false" :expand-type="false">
-        <template slot="isok" slot-scope="scope">
+        <template slot="isok" scope="scope">
           <i class="el-icon-success" v-if="scope.row.cat_deleted === false" style="color: lightgreen;"></i>
           <i class="el-icon-error" v-else style="color: red;"></i>
         </template>
-        <template slot="order" slot-scope="scope">
+        <template slot="order" scope="scope">
           <el-tag v-if="scope.row.cat_level === 0" size="mini">一级</el-tag>
           <el-tag type="success" v-else-if="scope.row.cat_level === 1" size="mini">二级</el-tag>
           <el-tag type="warning" v-else size="mini">三级</el-tag>
         </template>
-        <template slot="opt" slot-scope="scope">
+        <template slot="opt" scope="scope">
           <el-button type="primary" icon="el-icon-edit" size="mini" @click="openEditCateDialog(scope.row.cat_id)">编辑
           </el-button>
           <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteCate(scope.row.cat_id)">删除

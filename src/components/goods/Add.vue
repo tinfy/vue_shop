@@ -135,7 +135,7 @@ export default {
       // 根据商品分类的id得到的商品静态数组
       onlyTableData: [],
       // 图片上传的地址
-      uploadURL: 'http://127.0.0.1:8888/api/private/v1/upload',
+      uploadURL: 'http://vueshop.tongjiebin.cn:8888/api/private/v1/upload',
       // 上传图片的请求头header
       headerObj: {
         Authorization: window.sessionStorage.getItem('token')
@@ -223,7 +223,7 @@ export default {
       // console.log(file)
       // 获取移除的图片的tmp_path
       const tmpPath = file.response.data.tmp_path
-      console.log(tmpPath)
+      // console.log(tmpPath)
       // 获得移除的图片在 addForm.pics 数组中的索引
       const index = this.addForm.pics.findIndex(x => x.pic === tmpPath)
       this.addForm.pics.splice(index, 1)
@@ -238,7 +238,7 @@ export default {
       }
       // 把生成的对象push到 addForm.pics 数组中
       this.addForm.pics.push(picObj)
-      console.log(this.addForm.pics)
+      // console.log(this.addForm.pics)
     },
     // 添加商品
     addGood () {

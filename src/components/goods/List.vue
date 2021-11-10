@@ -29,30 +29,20 @@
         </el-table-column>
         <el-table-column prop="goods_weight" label="商品重量" width="90px">
         </el-table-column>
-        <el-table-column prop="add_time" label="创建时间" width="150px">
-          <template v-slot:default="slotProps">
-            <!-- slotProps.row 代表这一行的数据 -->
-            {{slotProps.row.add_time | dateFormat}}
-          </template>
+        <el-table-column prop="add_time" label="创建时间" width="150px" v-slot="{ row }">
+          {{row.add_time | dateFormat}}
         </el-table-column>
-        <el-table-column label="操作" width="190px">
-          <template v-slot:default="slotProps">
-            <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditGoodDialog(slotProps.row.goods_id)">编辑</el-button>
-            <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeById(slotProps.row.goods_id)">删除
-            </el-button>
-          </template>
+        <el-table-column label="操作" width="190px" v-slot="{ row }">
+          <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditGoodDialog(row.goods_id)">编辑</el-button>
+          <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeById(row.goods_id)">删除
+          </el-button>
         </el-table-column>
       </el-table>
       <!-- 分页区域 -->
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-        :current-page="queryInfo.pagenum" :page-sizes="[10, 15, 20, 30]" :page-size="queryInfo.pagesize"
-        layout="total, sizes, prev, pager, next, jumper" :total="total">
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="queryInfo.pagenum" :page-sizes="[10, 15, 20, 30]" :page-size="queryInfo.pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
     </el-card>
-    <el-dialog
-      title="修改商品"
-      :visible.sync="editGooddialogVisible"
-      width="50%" @close="editGooddialogClosed">
+    <el-dialog title="修改商品" :visible.sync="editGooddialogVisible" width="50%" @close="editGooddialogClosed">
       <el-form :model="editGoodForm" :rules="editGoodFormRules" ref="editGoodFormRef" label-width="120px">
         <el-form-item label="商品名称" prop="goods_name">
           <el-input v-model="editGoodForm.goods_name"></el-input>

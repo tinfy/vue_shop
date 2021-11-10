@@ -23,29 +23,21 @@
         </el-table-column>
         <el-table-column prop="order_price" label="订单价格">
         </el-table-column>
-        <el-table-column label="是否付款">
-          <template v-slot="slotProps">
-            <el-tag type="success" v-if="slotProps.row.pay_status === '1'">已付款</el-tag>
-            <el-tag type="danger" v-else>未付款</el-tag>
-          </template>
+        <el-table-column label="是否付款" v-slot="{ row }">
+          <el-tag type="success" v-if="row.pay_status === '1'">已付款</el-tag>
+          <el-tag type="danger" v-else>未付款</el-tag>
         </el-table-column>
         <el-table-column prop="is_send" label="是否发货">
         </el-table-column>
-        <el-table-column label="下单时间">
-          <template v-slot="slotProps">
-            {{slotProps.row.create_time | dateFormat}}
-          </template>
+        <el-table-column label="下单时间" v-slot="{ row }">
+          {{row.create_time | dateFormat}}
         </el-table-column>
         <el-table-column label="操作">
-          <template v-slot="">
-            <el-button type="primary" icon="el-icon-edit" size="mini" @click="editAddressDialog"></el-button>
-            <el-button type="success" icon="el-icon-location" size="mini" @click="showProgressDialog"></el-button>
-          </template>
+          <el-button type="primary" icon="el-icon-edit" size="mini" @click="editAddressDialog"></el-button>
+          <el-button type="success" icon="el-icon-location" size="mini" @click="showProgressDialog"></el-button>
         </el-table-column>
       </el-table>
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-        :current-page="queryParams.pagenum" :page-sizes="[5, 10, 15]" :page-size="queryParams.pagesize"
-        layout="total, sizes, prev, pager, next, jumper" :total="total">
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="queryParams.pagenum" :page-sizes="[5, 10, 15]" :page-size="queryParams.pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
     </el-card>
     <el-dialog title="修改地址" :visible.sync="editAddressdialogVisible" width="50%" @close="editAddressdialogClosed">

@@ -30,29 +30,22 @@
         </el-table-column>
         <el-table-column prop="role_name" label="角色">
         </el-table-column>
-        <el-table-column label="状态">
-          <!-- 作用域插槽 -->
-          <template slot-scope="scope">
-            <el-switch v-model="scope.row.mg_state" @change="userStateChange(scope.row)">
-            </el-switch>
-          </template>
+        <el-table-column label="状态" v-slot="{ row }">
+          <el-switch v-model="row.mg_state" @change="userStateChange(row)">
+          </el-switch>
         </el-table-column>
-        <el-table-column label="操作" width="180px">
-          <template slot-scope="scope">
-            <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.id)"></el-button>
-            <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteUserById(scope.row.id)">
+        <el-table-column label="操作" width="180px" v-slot:default="{ row }">
+          <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(row.id)"></el-button>
+          <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteUserById(row.id)">
+          </el-button>
+          <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">
+            <el-button type="warning" icon="el-icon-setting" size="mini" @click="openAllocateRoleDialog(row)">
             </el-button>
-            <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">
-              <el-button type="warning" icon="el-icon-setting" size="mini" @click="openAllocateRoleDialog(scope.row)">
-              </el-button>
-            </el-tooltip>
-          </template>
+          </el-tooltip>
         </el-table-column>
       </el-table>
       <!-- 分页区域 -->
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-        :current-page="queryParams.pagenum" :page-sizes="[1, 2, 5, 10]" :page-size="queryParams.pagesize"
-        layout="total, sizes, prev, pager, next, jumper" :total="total">
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="queryParams.pagenum" :page-sizes="[1, 2, 5, 10]" :page-size="queryParams.pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
     </el-card>
     <!-- 添加用户对话框区域 -->

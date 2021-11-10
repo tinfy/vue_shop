@@ -25,30 +25,24 @@
           <el-button type="primary" :disabled="isBtnDisabled" @click="addDialogVisible = true">添加参数</el-button>
           <!-- 动态参数表格 -->
           <el-table :data="manyTableData" border stripe>
-            <el-table-column type="expand">
+            <el-table-column type="expand" v-slot="{ row }">
               <!-- Tag标签 -->
-              <template slot-scope="scope">
-                <el-tag v-for="(item, i) in scope.row.attr_vals" :key="i" closable @close="deleteAttr(i, scope.row)">
-                  {{item}}</el-tag>
-                <el-input class="input-new-tag" v-if="scope.row.inputVisible" v-model="scope.row.inputValue"
-                  ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm(scope.row)"
-                  @blur="handleInputConfirm(scope.row)">
-                </el-input>
-                <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)">+ New Tag
-                </el-button>
-              </template>
+              <el-tag v-for="(item, i) in row.attr_vals" :key="i" closable @close="deleteAttr(i, row)">
+                {{item}}</el-tag>
+              <el-input class="input-new-tag" v-if="row.inputVisible" v-model="row.inputValue" ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm(row)" @blur="handleInputConfirm(row)">
+              </el-input>
+              <el-button v-else class="button-new-tag" size="small" @click="showInput(row)">+ New Tag
+              </el-button>
             </el-table-column>
             <el-table-column type="index" label="#">
             </el-table-column>
             <el-table-column prop="attr_name" label="参数名称">
             </el-table-column>
-            <el-table-column label="操作">
-              <template slot-scope="scope">
-                <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.attr_id)">编辑
-                </el-button>
-                <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteParams(scope.row.attr_id)">
-                  删除</el-button>
-              </template>
+            <el-table-column label="操作" v-slot="{ row }">
+              <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(row.attr_id)">编辑
+              </el-button>
+              <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteParams(row.attr_id)">
+                删除</el-button>
             </el-table-column>
           </el-table>
         </el-tab-pane>
@@ -56,30 +50,24 @@
           <el-button type="primary" :disabled="isBtnDisabled" @click="addDialogVisible = true">添加属性</el-button>
           <!-- 静态属性表格 -->
           <el-table :data="onlyTableData" border stripe>
-            <el-table-column type="expand">
+            <el-table-column type="expand" v-slot="{ row }">
               <!-- Tag标签 -->
-              <template slot-scope="scope">
-                <el-tag v-for="(item, i) in scope.row.attr_vals" :key="i" closable @close="deleteAttr(i, scope.row)">
-                  {{item}}</el-tag>
-                <el-input class="input-new-tag" v-if="scope.row.inputVisible" v-model="scope.row.inputValue"
-                  ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm(scope.row)"
-                  @blur="handleInputConfirm(scope.row)">
-                </el-input>
-                <el-button v-else class="button-new-tag" size="small" @click="showInput(scope.row)">+ New Tag
-                </el-button>
-              </template>
+              <el-tag v-for="(item, i) in row.attr_vals" :key="i" closable @close="deleteAttr(i, row)">
+                {{item}}</el-tag>
+              <el-input class="input-new-tag" v-if="row.inputVisible" v-model="row.inputValue" ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm(row)" @blur="handleInputConfirm(row)">
+              </el-input>
+              <el-button v-else class="button-new-tag" size="small" @click="showInput(row)">+ New Tag
+              </el-button>
             </el-table-column>
             <el-table-column type="index" label="#">
             </el-table-column>
             <el-table-column prop="attr_name" label="属性名称">
             </el-table-column>
-            <el-table-column label="操作">
-              <template slot-scope="scope">
-                <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.attr_id)">编辑
-                </el-button>
-                <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteParams(scope.row.attr_id)">删除
-                </el-button>
-              </template>
+            <el-table-column label="操作" v-slot="{ row }">
+              <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(row.attr_id)">编辑
+              </el-button>
+              <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteParams(row.attr_id)">删除
+              </el-button>
             </el-table-column>
           </el-table>
         </el-tab-pane>
@@ -366,19 +354,21 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .cate_opt {
-    margin: 15px 0;
-  }
+.cate_opt {
+  margin: 15px 0;
+}
 
-  .el-cascader {
-    width: 300px;
-  }
+.el-cascader {
+  width: 300px;
+}
 
-  .el-tag, .button-new-tag, .input-new-tag {
-    margin: 10px;
-  }
+.el-tag,
+.button-new-tag,
+.input-new-tag {
+  margin: 10px;
+}
 
-  .input-new-tag {
-    width: 100px;
-  }
+.input-new-tag {
+  width: 100px;
+}
 </style>

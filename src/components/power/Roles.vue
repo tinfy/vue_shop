@@ -16,48 +16,41 @@
       <!-- 角色列表区域 -->
       <el-table :data="rolesList" stripe border>
         <!-- 展开列 -->
-        <el-table-column type="expand">
-          <template slot-scope="scope">
-            <el-row :class="['borderbottom', i1 === 0 ? 'bordertop' : '', 'row-center']"
-              v-for="(item1, i1) in scope.row.children" :key="item1.id">
-              <!-- 一级权限 -->
-              <el-col :span="5">
-                <el-tag closable @close="removeRightById(scope.row, item1.id)">{{item1.authName}}</el-tag>
-                <i class="el-icon-caret-right"></i>
-              </el-col>
-              <!-- 二三级权限 -->
-              <el-col :span="19">
-                <el-row :class="[i2 === 0 ? '' : 'bordertop', 'row-center']" v-for="(item2, i2) in item1.children"
-                  :key="item2.id">
-                  <!-- 二级权限 -->
-                  <el-col :span="6">
-                    <el-tag type="success" closable @close="removeRightById(scope.row, item2.id)">{{item2.authName}}
-                    </el-tag>
-                    <i class="el-icon-caret-right"></i>
-                  </el-col>
-                  <!-- 三级权限 -->
-                  <el-col :span="18">
-                    <el-tag type="warning" v-for="item3 in item2.children" :key="item3.id" closable
-                      @close="removeRightById(scope.row, item3.id)">
-                      {{item3.authName}}
-                    </el-tag>
-                  </el-col>
-                </el-row>
-              </el-col>
-            </el-row>
-          </template>
+        <el-table-column type="expand" v-slot="{ row }">
+          <el-row :class="['borderbottom', i1 === 0 ? 'bordertop' : '', 'row-center']" v-for="(item1, i1) in row.children" :key="item1.id">
+            <!-- 一级权限 -->
+            <el-col :span="5">
+              <el-tag closable @close="removeRightById(row, item1.id)">{{item1.authName}}</el-tag>
+              <i class="el-icon-caret-right"></i>
+            </el-col>
+            <!-- 二三级权限 -->
+            <el-col :span="19">
+              <el-row :class="[i2 === 0 ? '' : 'bordertop', 'row-center']" v-for="(item2, i2) in item1.children" :key="item2.id">
+                <!-- 二级权限 -->
+                <el-col :span="6">
+                  <el-tag type="success" closable @close="removeRightById(row, item2.id)">{{item2.authName}}
+                  </el-tag>
+                  <i class="el-icon-caret-right"></i>
+                </el-col>
+                <!-- 三级权限 -->
+                <el-col :span="18">
+                  <el-tag type="warning" v-for="item3 in item2.children" :key="item3.id" closable @close="removeRightById(row, item3.id)">
+                    {{item3.authName}}
+                  </el-tag>
+                </el-col>
+              </el-row>
+            </el-col>
+          </el-row>
         </el-table-column>
         <el-table-column type="index" label="#"></el-table-column>
         <el-table-column label="角色名称" prop="roleName"></el-table-column>
         <el-table-column label="角色描述" prop="roleDesc"></el-table-column>
-        <el-table-column label="操作" width="300px">
-          <template slot-scope="scope">
-            <el-button size="mini" type="primary" icon="el-icon-edit" @click="openEditRoleDialog(scope.row.id)">编辑
-            </el-button>
-            <el-button size="mini" type="danger" icon="el-icon-delete" @click="deleteRole(scope.row.id)">删除</el-button>
-            <el-button size="mini" type="warning" icon="el-icon-setting" @click="showSetRightDialog(scope.row)">分配权限
-            </el-button>
-          </template>
+        <el-table-column label="操作" width="300px" v-slot="{ row }">
+          <el-button size="mini" type="primary" icon="el-icon-edit" @click="openEditRoleDialog(row.id)">编辑
+          </el-button>
+          <el-button size="mini" type="danger" icon="el-icon-delete" @click="deleteRole(row.id)">删除</el-button>
+          <el-button size="mini" type="warning" icon="el-icon-setting" @click="showSetRightDialog(row)">分配权限
+          </el-button>
         </el-table-column>
       </el-table>
     </el-card>
@@ -78,12 +71,12 @@
     </el-dialog>
     <!-- 修改角色对话框 -->
     <el-dialog title="修改角色" :visible.sync="editRoleDialogVisible" width="50%" @close="editAddRoleDialog">
-      <el-form ref="editRoleFormRef" :model="rolesList" :rules="addRoleFormRules" label-width="80px">
+      <el-form ref="editRoleFormRef" :model="roleInfo" :rules="addRoleFormRules" label-width="80px">
         <el-form-item label="角色名称" prop="roleName">
-          <el-input v-model="rolesList.roleName"></el-input>
+          <el-input v-model="roleInfo.roleName"></el-input>
         </el-form-item>
         <el-form-item label="角色描述">
-          <el-input v-model="rolesList.roleDesc"></el-input>
+          <el-input v-model="roleInfo.roleDesc"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -94,8 +87,7 @@
     <!-- 分配权限对话框 -->
     <el-dialog title="分配权限" :visible.sync="setRightDialogVisible" width="50%" @close="setRightDialogClosed">
       <!-- 树形控件 -->
-      <el-tree :data="rightsList" :props="treeProps" ref="rightsListRef" show-checkbox node-key="id" default-expand-all
-        :default-checked-keys="defaultKeys"></el-tree>
+      <el-tree :data="rightsList" :props="treeProps" ref="rightsListRef" show-checkbox node-key="id" default-expand-all :default-checked-keys="defaultKeys"></el-tree>
       <span slot="footer" class="dialog-footer">
         <el-button @click="setRightDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="allocateRights">确 定</el-button>
@@ -145,7 +137,9 @@ export default {
       },
       // 默认勾选的权限的id
       defaultKeys: [],
-      roleId: ''
+      roleId: '',
+      // 点击编辑时，那一行的数据存放在这里
+      roleInfo: {}
     }
   },
   created () {
@@ -194,7 +188,7 @@ export default {
       if (res.meta.status !== 200) {
         return this.$message.error('获取角色信息失败')
       }
-      this.rolesList = res.data
+      this.roleInfo = res.data
       this.editRoleDialogVisible = true
     },
     // 编辑角色信息
@@ -203,9 +197,9 @@ export default {
         if (!valid) return false
         const {
           data: res
-        } = await this.$http.put(`roles/${this.rolesList.roleId}`, {
-          roleName: this.rolesList.roleName,
-          roleDesc: this.rolesList.roleDesc
+        } = await this.$http.put(`roles/${this.roleInfo.roleId}`, {
+          roleName: this.roleInfo.roleName,
+          roleDesc: this.roleInfo.roleDesc
         })
         if (res.meta.status !== 200) {
           return this.$message.error('修改角色信息失败')
@@ -266,7 +260,6 @@ export default {
       this.rightsList = res.data
       // 记录当前打开的角色的id
       this.roleId = role.id
-      // console.log(res)
     },
     // 递归获取所有三级权限的id放到defaultKeys数组中
     getLeafKey (node, arr) {
@@ -300,21 +293,21 @@ export default {
 </script>
 
 <style lang="less" scoped="scoped">
-  .el-tag {
-    margin: 7px;
-  }
+.el-tag {
+  margin: 7px;
+}
 
-  .bordertop {
-    border-top: 1px solid #eee;
-  }
+.bordertop {
+  border-top: 1px solid #eee;
+}
 
-  .borderbottom {
-    border-bottom: 1px solid #eee;
-  }
+.borderbottom {
+  border-bottom: 1px solid #eee;
+}
 
-  // 让一二级权限标签垂直居中
-  .row-center {
-    display: flex;
-    align-items: center;
-  }
+// 让一二级权限标签垂直居中
+.row-center {
+  display: flex;
+  align-items: center;
+}
 </style>
